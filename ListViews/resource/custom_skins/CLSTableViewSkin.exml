@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="skins.CLSTableViewSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="640" height="1136">
+	<e:Group>
+		<e:Scroller width="640" height="1136">
+		<e:List id="mList" width="640" height="1136" x="198.5" y="56">
+			<e:layout>
+			<e:VerticalLayout gap="10"/>
+			</e:layout>
+			<e:itemRendererSkinName id="itemRenderer">
+			<e:Skin>
+                <e:Rect width="640" horizontalCenter="0" verticalCenter="0" height="100" fillColor="{data.textBackGround}"/>
+				<e:Label verticalAlign="middle" textAlign="center" width="640" height="100" size="36" text="{data.text}" textColor="{data.textColor}" wordWrap="true"/>
+			</e:Skin>
+			</e:itemRendererSkinName>
+			<e:ArrayCollection>
+			<e:Array>
+				<e:Object text="123213" textColor="0xffffff" textBackGround="0xff3452"/>
+                <e:Object text="123213" textColor="0xffffff" textBackGround="0xff3452"/>
+                <e:Object text="123213" textColor="0xffffff" textBackGround="0xff3452"/>
+                <e:Object text="123213" textColor="0xffffff" textBackGround="0xff3452"/>
+                <e:Object text="123213" textColor="0xffffff" textBackGround="0xff3452"/>
+                <e:Object text="123213" textColor="0xffffff" textBackGround="0xff3452"/>
+                <e:Object text="123213" textColor="0xffffff" textBackGround="0xff3452"/>
+                <e:Object text="123213" textColor="0xffffff" textBackGround="0xff3452"/>
+			
+			</e:Array>
+			</e:ArrayCollection>
+		</e:List>
+		</e:Scroller>
+	</e:Group>		
+</e:Skin>
+
