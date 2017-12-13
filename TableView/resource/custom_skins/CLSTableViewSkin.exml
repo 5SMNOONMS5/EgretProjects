@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="skins.CLSTableViewSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="640" height="1136">
 	<e:Group>
-		<e:Scroller width="640" height="1136">
+		<e:Scroller id="mScroller" width="640" height="1136">
 		<e:List id="mList" width="640" height="1136" x="198.5" y="56">
 			<e:layout>
 			<e:VerticalLayout gap="10"/>

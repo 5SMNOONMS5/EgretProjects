@@ -148,37 +148,58 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.startCreateScene = function () {
+        // alloc TableView
         var tableView = new view.CLSTableView();
         tableView.x = 0;
         tableView.y = 0;
         tableView.width = this.stage.width;
         tableView.height = this.stage.height;
         this.addChild(tableView);
-        /**
-          *
-          */
         this._tableView = tableView;
         this.addRefershButton();
+        this.addScrollToTopButton();
     };
+    /******************************************************************************************************
+    *
+    * refersh
+    *
+    *****************************************************************************************************/
     Main.prototype.addRefershButton = function () {
         var btn = new eui.Button();
         btn.bottom = 0;
         btn.horizontalCenter = 0;
-        btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onClick, this);
+        btn.label = "刷新";
+        btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.refersh, this);
         this.addChild(btn);
     };
-    Main.prototype.onClick = function () {
-        var textsBackGround = [0xbbdb92, 0x7c00c4, 0x00d9ff, 0xff6600, 0xffd8d8, 0x021631, 0x339999, 0xf1dc39, 0xfb8166, 0xf18039];
-        var textsColor = [0x39f1dc, 0x39aaf1, 0x0a5787, 0x70459a, 0x456f9a, 0x459a70, 0x9b5f4f, 0x9a7045, 0x3f0000, 0x530b80];
+    Main.prototype.refersh = function () {
+        var textBackGrounds = [0xbbdb92, 0x7c00c4, 0x00d9ff, 0xff6600, 0xffd8d8, 0x021631, 0x339999, 0xf1dc39, 0xfb8166, 0xf18039];
+        var textColors = [0x39f1dc, 0x39aaf1, 0x0a5787, 0x70459a, 0x456f9a, 0x459a70, 0x9b5f4f, 0x9a7045, 0x3f0000, 0x530b80];
         var datas = [];
         for (var i = 0; i < 40; i++) {
             var randomNumber = helper.randomInt(1, 10);
             var randomNumber2 = helper.randomInt(1, 10);
             var text = String(helper.randomInt(1000000, 200000));
-            var data = new model.CLSTableViewData(text, textsColor[randomNumber], textsBackGround[randomNumber2]);
+            var data = new model.CLSTableViewData(text, textColors[randomNumber], textBackGrounds[randomNumber2]);
             datas.push(data);
         }
         this._tableView.refresh(datas);
+    };
+    /******************************************************************************************************
+    *
+    * 添加往上按鈕
+    *
+    *****************************************************************************************************/
+    Main.prototype.addScrollToTopButton = function () {
+        var btn = new eui.Button();
+        btn.bottom = 0;
+        btn.right = 0;
+        btn.label = "往上";
+        btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.scrollToTopmost, this);
+        this.addChild(btn);
+    };
+    Main.prototype.scrollToTopmost = function () {
+        this._tableView.scrollerToTopMost();
     };
     return Main;
 }(eui.UILayer));

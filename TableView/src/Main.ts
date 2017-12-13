@@ -136,14 +136,16 @@ class Main extends eui.UILayer {
             this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
         }
     }
-
+    
     private _tableView: view.CLSTableView;
+
     /**
      * 创建场景界面
      * Create scene interface
      */
     protected startCreateScene(): void {
 
+        // alloc TableView
         let tableView = new view.CLSTableView();
         tableView.x = 0;
         tableView.y = 0;
@@ -151,39 +153,60 @@ class Main extends eui.UILayer {
         tableView.height = this.stage.height;
         this.addChild(tableView);
 
-        /**
-          * 
-          */
         this._tableView = tableView
 
         this.addRefershButton();
+        this.addScrollToTopButton();
     }
+
+    /******************************************************************************************************
+    *
+    * refersh
+    *
+    *****************************************************************************************************/
 
     private addRefershButton() {
         let btn = new eui.Button();
         btn.bottom = 0;
         btn.horizontalCenter = 0;
-        btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onClick, this);
+        btn.label = "刷新";
+        btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.refersh, this);
         this.addChild(btn);
     }
 
+    private refersh(): void {
 
-    
-
-    private onClick(): void {
-
-        let textsBackGround: number[] = [0xbbdb92, 0x7c00c4, 0x00d9ff, 0xff6600, 0xffd8d8, 0x021631, 0x339999, 0xf1dc39, 0xfb8166, 0xf18039];
-        let textsColor: number[] = [0x39f1dc, 0x39aaf1, 0x0a5787, 0x70459a, 0x456f9a, 0x459a70, 0x9b5f4f, 0x9a7045, 0x3f0000, 0x530b80];
+        let textBackGrounds: number[] = [0xbbdb92, 0x7c00c4, 0x00d9ff, 0xff6600, 0xffd8d8, 0x021631, 0x339999, 0xf1dc39, 0xfb8166, 0xf18039];
+        let textColors: number[] = [0x39f1dc, 0x39aaf1, 0x0a5787, 0x70459a, 0x456f9a, 0x459a70, 0x9b5f4f, 0x9a7045, 0x3f0000, 0x530b80];
 
         var datas: model.CLSTableViewData[] = [];
         for (var i: number = 0; i < 40; i++) {
-            let randomNumber = helper.randomInt(1,10);
-            let randomNumber2 = helper.randomInt(1,10);
+            let randomNumber = helper.randomInt(1, 10);
+            let randomNumber2 = helper.randomInt(1, 10);
             let text = String(helper.randomInt(1000000, 200000));
-            let data = new model.CLSTableViewData(text, textsColor[randomNumber], textsBackGround[randomNumber2]);
+            let data = new model.CLSTableViewData(text, textColors[randomNumber], textBackGrounds[randomNumber2]);
             datas.push(data);
         }
 
         this._tableView.refresh(datas);
+    }
+
+    /******************************************************************************************************
+    *
+    * 添加往上按鈕
+    *
+    *****************************************************************************************************/
+
+    private addScrollToTopButton() {
+        let btn = new eui.Button();
+        btn.bottom = 0;
+        btn.right = 0;
+        btn.label = "往上";
+        btn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.scrollToTopmost, this);
+        this.addChild(btn);
+    }
+
+    private scrollToTopmost(): void {
+        this._tableView.scrollerToTopMost();
     }
 }
