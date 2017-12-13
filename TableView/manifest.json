@@ -13,6 +13,7 @@
 		"bin-debug/Main.js",
 		"bin-debug/ThemeAdapter.js",
 		"bin-debug/helper/CLSHelper.js",
+		"bin-debug/helper/Error.js",
 		"bin-debug/model/CLSModel.js",
 		"bin-debug/view/CLSTableView.js"
 	]

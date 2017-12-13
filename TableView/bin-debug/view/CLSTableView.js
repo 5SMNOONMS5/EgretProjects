@@ -25,7 +25,6 @@ var view;
             *****************************************************************************************************/
             _this._isCompleteLoadSkin = false;
             _this._isScrolling = false;
-            _this._currentScrollOffset = 0;
             _this.addEventListener(eui.UIEvent.COMPLETE, _this.omComplete, _this);
             _this.skinName = "skins.CLSTableViewSkin";
             return _this;
@@ -35,15 +34,26 @@ var view;
           * sender {model.CLSTableViewData[]} 只能傳入 CLSTableViewData[] 的屬性
           */
         CLSTableView.prototype.refresh = function (sender) {
+            if (this._isCompleteLoadSkin == false) {
+                helper.logError("CLSTableView, " + constant.ERROR_SKIN_NOT_LOAD_YET);
+                return;
+            }
             this.stopAnimation();
+            // clear ， 不知道有沒有更好的辦法？？
             this.mList.dataProvider.length = 0;
+            // assign new data
             this.mList.dataProvider = new eui.ArrayCollection(sender);
+            // refersh
             this.mList.dataProviderRefreshed();
         };
         /**
           * 滑到最上面
           */
         CLSTableView.prototype.scrollerToTopMost = function () {
+            if (this._isCompleteLoadSkin == false) {
+                helper.logError("CLSTableView, " + constant.ERROR_SKIN_NOT_LOAD_YET);
+                return;
+            }
             this.stopAnimation();
             this.mScroller.viewport.scrollV = 0;
         };
@@ -54,20 +64,19 @@ var view;
         *****************************************************************************************************/
         CLSTableView.prototype.omComplete = function () {
             this._isCompleteLoadSkin = true;
-            // 習慣先判斷 在 remove eventlistener，即使知道上面有了
+            // 好習慣先判斷 在 remove eventlistener，即使知道上面有 addEventListener
             if (this.hasEventListener(eui.UIEvent.COMPLETE) == true) {
                 this.removeEventListener(eui.UIEvent.COMPLETE, this.omComplete, this);
             }
             this.mList.addEventListener(eui.ItemTapEvent.ITEM_TAP, function (e) {
-                console.log("\u7576\u524D\u9EDE\u64CA\u7B2C, " + e.itemIndex + " \u500B index");
+                helper.logDescription("\u7576\u524D\u9EDE\u64CA\u7B2C, " + e.itemIndex + " \u500B index");
             }, this);
             this.mScroller.addEventListener(eui.UIEvent.CHANGE_START, function (e) {
-                console.log("\u958B\u59CB\u6EFE\u52D5");
+                helper.logDescription("\u958B\u59CB\u6EFE\u52D5");
                 this._isScrolling = true;
             }, this);
             this.mScroller.addEventListener(eui.UIEvent.CHANGE_END, function (e) {
-                console.log("\u7D50\u675F\u6EFE\u52D5");
-                this._currentScrollOffset = this.mScroller.viewport.scrollV;
+                helper.logDescription("\u7D50\u675F\u6EFE\u52D5");
                 this._isScrolling = false;
             }, this);
         };

@@ -80,14 +80,14 @@ namespace view {
             }
 
             this.mList.addEventListener(eui.ItemTapEvent.ITEM_TAP, function (e: eui.ItemTapEvent) {
-                console.log(`當前點擊第, ${e.itemIndex} 個 index`);
+                helper.logDescription(`當前點擊第, ${e.itemIndex} 個 index`);
             }, this);
             this.mScroller.addEventListener(eui.UIEvent.CHANGE_START, function (e: eui.ItemTapEvent) {
-                console.log(`開始滾動`);
+                helper.logDescription(`開始滾動`);
                 this._isScrolling = true;
             }, this);
             this.mScroller.addEventListener(eui.UIEvent.CHANGE_END, function (e: eui.ItemTapEvent) {
-                console.log(`結束滾動`);
+                helper.logDescription(`結束滾動`);
                 this._isScrolling = false
             }, this);
         }
