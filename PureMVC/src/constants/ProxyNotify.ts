@@ -1,0 +1,9 @@
+
+// TypeScript file
+
+
+namespace constants {
+
+
+}
+
