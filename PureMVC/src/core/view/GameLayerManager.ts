@@ -26,13 +26,13 @@ namespace core.view {
 
         private static _instance: GameLayerManager;
 
-        //构造方法
+        // 构造方法
         public constructor() {
             super();
             this.init();
         }
         
-        //游戏容器管理器单例
+        // 游戏容器管理器单例
         public static getInstance(): GameLayerManager {
             if (!this._instance) {
                 this._instance = new GameLayerManager();
@@ -40,9 +40,45 @@ namespace core.view {
             return this._instance;
         }
 
-        //初始化场景类
-        public init(): void {
+        /**
+         * 增加層級
+         * @returns {eui.UILayer} 返回當前 layer 給予添加
+         */
+        public pushLayer(): Promise<eui.UILayer> {
+            return new Promise((resolve) => {
+                return (resolve(this.mainLayer));
+            });
+        }
 
+        /**
+          * 刪除層級
+          * 幾個層級 {number} 
+          * @returns {Promise<any>} 是否成功 remove，如果不成功就返回錯誤訊息
+          */
+        public popLayer(layer: number = 1): Promise<any> {
+             if (this.mainLayer.numChildren <= 0 && this.mainLayer.numChildren <= layer) {
+                return new Promise((reject) => {
+                    return reject(constants.error.EMPTY_LAYER);
+                });
+             } else {
+                 for (var index = 0; index < layer; index++) {
+                    this.mainLayer.removeChildAt(this.mainLayer.numChildren - 1);
+                }
+                return new Promise((resolve) => {
+                    return resolve(true);
+                });
+             }
+        }
+
+
+        /******************************************************************************************************
+        *
+        * Private
+        *
+        *****************************************************************************************************/
+
+        // 初始化场景类
+        private init(): void {
             this.touchThrough = true;
             this.sceneLayer.touchThrough = true;
             this.mainLayer.touchThrough = true;
