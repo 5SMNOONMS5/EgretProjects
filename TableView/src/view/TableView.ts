@@ -3,7 +3,7 @@
 
 namespace view {
 
-    export class CLSTableView extends eui.Component {
+    export class TableView extends eui.Component {
 
         /******************************************************************************************************
        *
@@ -28,20 +28,22 @@ namespace view {
         public constructor() {
             super();
             this.addEventListener(eui.UIEvent.COMPLETE, this.omComplete, this);
-            this.skinName = "skins.CLSTableViewSkin";
+            this.skinName = "skins.TableViewSkin";
         }
 
         /**
           * 改變 tableview 裡面的值
-          * sender {model.CLSTableViewData[]} 只能傳入 CLSTableViewData[] 的屬性
+          * sender {model.TableViewData[]} 只能傳入 TableViewData[] 的屬性
           */
-        public refresh(sender: model.CLSTableViewData[]): void {
+        public refresh(sender: model.TableViewData[]): void {
 
             if (this._isCompleteLoadSkin == false) {
-                helper.logError(`CLSTableView, ${constant.ERROR_SKIN_NOT_LOAD_YET}`)
+                helper.logError(`TableView, ${constant.ERROR_SKIN_NOT_LOAD_YET}`)
                 return;
             }
-
+            
+            helper.logDescription(sender[0]);
+            
             this.stopAnimation();
 
             // clear ， 不知道有沒有更好的辦法？？
@@ -56,8 +58,9 @@ namespace view {
           * 滑到最上面
           */
         public scrollerToTopMost(): void {
+
             if (this._isCompleteLoadSkin == false) {
-                helper.logError(`CLSTableView, ${constant.ERROR_SKIN_NOT_LOAD_YET}`)
+                helper.logError(`TableView, ${constant.ERROR_SKIN_NOT_LOAD_YET}`)
                 return;
             }
 

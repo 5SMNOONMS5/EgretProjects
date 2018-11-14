@@ -1,15 +1,15 @@
 # TableView
 
-TableView 小 demo
+### 概要 
 
-- [x] skin 跟組件分離 
-- [x] skin 數據綁定
-- [x] table 數據刷新
+實作一個小型的表格，可以上下滑動，點擊刷新數據。
 
-## Quick Demo
+### 功能
 
+- [o] skin 跟 組件 分離 
+- [o] skin 跟 組建 之間的數據綁定 
+- [o] table 數據刷新
 
+### Engine
 
-## Engine
-
-5.0.11
+2018/11/04 更新到最新版的 5.2.12 

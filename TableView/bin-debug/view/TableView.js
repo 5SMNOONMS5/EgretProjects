@@ -2,21 +2,18 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = this && this.__extends || function __extends(t, e) { 
+ function r() { 
+ this.constructor = t;
+}
+for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
+r.prototype = e.prototype, t.prototype = new r();
+};
 var view;
 (function (view) {
-    var CLSTableView = (function (_super) {
-        __extends(CLSTableView, _super);
-        function CLSTableView() {
+    var TableView = (function (_super) {
+        __extends(TableView, _super);
+        function TableView() {
             var _this = _super.call(this) || this;
             /******************************************************************************************************
             *
@@ -26,18 +23,19 @@ var view;
             _this._isCompleteLoadSkin = false;
             _this._isScrolling = false;
             _this.addEventListener(eui.UIEvent.COMPLETE, _this.omComplete, _this);
-            _this.skinName = "skins.CLSTableViewSkin";
+            _this.skinName = "skins.TableViewSkin";
             return _this;
         }
         /**
           * 改變 tableview 裡面的值
-          * sender {model.CLSTableViewData[]} 只能傳入 CLSTableViewData[] 的屬性
+          * sender {model.TableViewData[]} 只能傳入 TableViewData[] 的屬性
           */
-        CLSTableView.prototype.refresh = function (sender) {
+        TableView.prototype.refresh = function (sender) {
             if (this._isCompleteLoadSkin == false) {
-                helper.logError("CLSTableView, " + constant.ERROR_SKIN_NOT_LOAD_YET);
+                helper.logError("TableView, " + constant.ERROR_SKIN_NOT_LOAD_YET);
                 return;
             }
+            helper.logDescription(sender[0]);
             this.stopAnimation();
             // clear ， 不知道有沒有更好的辦法？？
             this.mList.dataProvider.length = 0;
@@ -49,9 +47,9 @@ var view;
         /**
           * 滑到最上面
           */
-        CLSTableView.prototype.scrollerToTopMost = function () {
+        TableView.prototype.scrollerToTopMost = function () {
             if (this._isCompleteLoadSkin == false) {
-                helper.logError("CLSTableView, " + constant.ERROR_SKIN_NOT_LOAD_YET);
+                helper.logError("TableView, " + constant.ERROR_SKIN_NOT_LOAD_YET);
                 return;
             }
             this.stopAnimation();
@@ -62,7 +60,7 @@ var view;
         * Private method
         *
         *****************************************************************************************************/
-        CLSTableView.prototype.omComplete = function () {
+        TableView.prototype.omComplete = function () {
             this._isCompleteLoadSkin = true;
             // 好習慣先判斷 在 remove eventlistener，即使知道上面有 addEventListener
             if (this.hasEventListener(eui.UIEvent.COMPLETE) == true) {
@@ -80,15 +78,15 @@ var view;
                 this._isScrolling = false;
             }, this);
         };
-        CLSTableView.prototype.stopAnimation = function () {
+        TableView.prototype.stopAnimation = function () {
             if (this._isScrolling == true) {
                 this.mScroller.stopAnimation();
                 this._isScrolling = false;
             }
         };
-        return CLSTableView;
+        return TableView;
     }(eui.Component));
-    view.CLSTableView = CLSTableView;
-    __reflect(CLSTableView.prototype, "view.CLSTableView");
+    view.TableView = TableView;
+    __reflect(TableView.prototype, "view.TableView");
 })(view || (view = {}));
-//# sourceMappingURL=CLSTableView.js.map
+//# sourceMappingURL=TableView.js.map

@@ -28,11 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Main extends eui.UILayer {
-    /**
-     * 加载进度界面
-     * loading process interface
-     */
-    private loadingView: LoadingUI;
+
+    private _tableView: view.TableView;
+
     protected createChildren(): void {
         super.createChildren();
 
@@ -53,100 +51,57 @@ class Main extends eui.UILayer {
         let assetAdapter = new AssetAdapter();
         egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
         egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
-        //Config loading process interface
-        //设置加载进度界面
-        this.loadingView = new LoadingUI();
-        this.stage.addChild(this.loadingView);
-        // initialize the Resource loading library
-        //初始化Resource资源加载库
-        RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
-        RES.loadConfig("resource/default.res.json", "resource/");
-    }
-    /**
-     * 配置文件加载完成,开始预加载皮肤主题资源和preload资源组。
-     * Loading of configuration file is complete, start to pre-load the theme configuration file and the preload resource group
-     */
-    private onConfigComplete(event: RES.ResourceEvent): void {
-        RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
-        // load skin theme configuration file, you can manually modify the file. And replace the default skin.
-        //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        let theme = new eui.Theme("resource/default.thm.json", this.stage);
-        theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
 
-        RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
-        RES.addEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
-        RES.addEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
-        RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, this.onItemLoadError, this);
-        RES.loadGroup("preload");
+        this.runGame().catch(e => {
+            helper.logError(e);
+        })
     }
-    private isThemeLoadEnd: boolean = false;
-    /**
-     * 主题文件加载完成,开始预加载
-     * Loading of theme configuration file is complete, start to pre-load the 
-     */
-    private onThemeLoadComplete(): void {
-        this.isThemeLoadEnd = true;
-        this.createScene();
-    }
-    private isResourceLoadEnd: boolean = false;
-    /**
-     * preload资源组加载完成
-     * preload resource group is loaded
-     */
-    private onResourceLoadComplete(event: RES.ResourceEvent): void {
-        if (event.groupName == "preload") {
-            this.stage.removeChild(this.loadingView);
-            RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
-            RES.removeEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
-            RES.removeEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
-            RES.removeEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, this.onItemLoadError, this);
-            this.isResourceLoadEnd = true;
-            this.createScene();
-        }
-    }
-    private createScene() {
-        if (this.isThemeLoadEnd && this.isResourceLoadEnd) {
-            this.startCreateScene();
-        }
-    }
-    /**
-     * 资源组加载出错
-     *  The resource group loading failed
-     */
-    private onItemLoadError(event: RES.ResourceEvent): void {
-        console.warn("Url:" + event.resItem.url + " has failed to load");
-    }
-    /**
-     * 资源组加载出错
-     * Resource group loading failed
-     */
-    private onResourceLoadError(event: RES.ResourceEvent): void {
-        //TODO
-        console.warn("Group:" + event.groupName + " has failed to load");
-        //忽略加载失败的项目
-        //ignore loading failed projects
-        this.onResourceLoadComplete(event);
-    }
-    /**
-     * preload资源组加载进度
-     * loading process of preload resource
-     */
-    private onResourceProgress(event: RES.ResourceEvent): void {
-        if (event.groupName == "preload") {
-            this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
-        }
-    }
-    
-    private _tableView: view.CLSTableView;
 
+    private async runGame() {
+        await this.loadResource()
+        this.createGameScene();
+        // const result = await RES.getResAsync("description_json")
+        // this.startAnimation(result);
+        await platform.login();
+        const userInfo = await platform.getUserInfo();
+        helper.logDescription(userInfo);
+    }
+
+    private async loadResource() {
+        try {
+            const loadingView = new LoadingUI();
+            this.stage.addChild(loadingView);
+            await RES.loadConfig("resource/default.res.json", "resource/");
+            await this.loadTheme();
+            await RES.loadGroup("preload", 0, loadingView);
+            this.stage.removeChild(loadingView);
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
+
+    private loadTheme() {
+        return new Promise((resolve, reject) => {
+            // load skin theme configuration file, you can manually modify the file. And replace the default skin.
+            //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
+            let theme = new eui.Theme("resource/default.thm.json", this.stage);
+            theme.addEventListener(eui.UIEvent.COMPLETE, () => {
+                resolve();
+            }, this);
+
+        })
+    }
+
+    private textfield: egret.TextField;
     /**
      * 创建场景界面
      * Create scene interface
      */
-    protected startCreateScene(): void {
+    protected createGameScene(): void {
 
-        // alloc TableView
-        let tableView = new view.CLSTableView();
+         // alloc TableView
+        let tableView = new view.TableView();
         tableView.x = 0;
         tableView.y = 0;
         tableView.width = this.stage.width;
@@ -157,8 +112,119 @@ class Main extends eui.UILayer {
 
         this.addRefershButton();
         this.addScrollToTopButton();
+        
+        return;
+
+        let sky = this.createBitmapByName("bg_jpg");
+        this.addChild(sky);
+        let stageW = this.stage.stageWidth;
+        let stageH = this.stage.stageHeight;
+        sky.width = stageW;
+        sky.height = stageH;
+
+        let topMask = new egret.Shape();
+        topMask.graphics.beginFill(0x000000, 0.5);
+        topMask.graphics.drawRect(0, 0, stageW, 172);
+        topMask.graphics.endFill();
+        topMask.y = 33;
+        this.addChild(topMask);
+
+        let icon: egret.Bitmap = this.createBitmapByName("egret_icon_png");
+        this.addChild(icon);
+        icon.x = 26;
+        icon.y = 33;
+
+        let line = new egret.Shape();
+        line.graphics.lineStyle(2, 0xffffff);
+        line.graphics.moveTo(0, 0);
+        line.graphics.lineTo(0, 117);
+        line.graphics.endFill();
+        line.x = 172;
+        line.y = 61;
+        this.addChild(line);
+
+
+        let colorLabel = new egret.TextField();
+        colorLabel.textColor = 0xffffff;
+        colorLabel.width = stageW - 172;
+        colorLabel.textAlign = "center";
+        colorLabel.text = "Hello Egret";
+        colorLabel.size = 24;
+        colorLabel.x = 172;
+        colorLabel.y = 80;
+        this.addChild(colorLabel);
+
+        let textfield = new egret.TextField();
+        this.addChild(textfield);
+        textfield.alpha = 0;
+        textfield.width = stageW - 172;
+        textfield.textAlign = egret.HorizontalAlign.CENTER;
+        textfield.size = 24;
+        textfield.textColor = 0xffffff;
+        textfield.x = 172;
+        textfield.y = 135;
+        this.textfield = textfield;
+
+        let button = new eui.Button();
+        button.label = "Click!";
+        button.horizontalCenter = 0;
+        button.verticalCenter = 0;
+        this.addChild(button);
+        button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
+    }
+    /**
+     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
+     * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
+     */
+    private createBitmapByName(name: string): egret.Bitmap {
+        let result = new egret.Bitmap();
+        let texture: egret.Texture = RES.getRes(name);
+        result.texture = texture;
+        return result;
+    }
+    /**
+     * 描述文件加载成功，开始播放动画
+     * Description file loading is successful, start to play the animation
+     */
+    private startAnimation(result: Array<any>): void {
+        let parser = new egret.HtmlTextParser();
+
+        let textflowArr = result.map(text => parser.parse(text));
+        let textfield = this.textfield;
+        let count = -1;
+        let change = () => {
+            count++;
+            if (count >= textflowArr.length) {
+                count = 0;
+            }
+            let textFlow = textflowArr[count];
+
+            // 切换描述内容
+            // Switch to described content
+            textfield.textFlow = textFlow;
+            let tw = egret.Tween.get(textfield);
+            tw.to({ "alpha": 1 }, 200);
+            tw.wait(2000);
+            tw.to({ "alpha": 0 }, 200);
+            tw.call(change, this);
+        };
+
+        change();
     }
 
+    /**
+     * 点击按钮
+     * Click the button
+     */
+    private onButtonClick(e: egret.TouchEvent) {
+        let panel = new eui.Panel();
+        panel.title = "Title";
+        panel.horizontalCenter = 0;
+        panel.verticalCenter = 0;
+        this.addChild(panel);
+    }
+
+    
     /******************************************************************************************************
     *
     * refersh
@@ -176,15 +242,17 @@ class Main extends eui.UILayer {
 
     private refersh(): void {
 
-        let textBackGrounds: number[] = [0xbbdb92, 0x7c00c4, 0x00d9ff, 0xff6600, 0xffd8d8, 0x021631, 0x339999, 0xf1dc39, 0xfb8166, 0xf18039];
-        let textColors: number[] = [0x39f1dc, 0x39aaf1, 0x0a5787, 0x70459a, 0x456f9a, 0x459a70, 0x9b5f4f, 0x9a7045, 0x3f0000, 0x530b80];
+        let textBackGrounds: number[] = 
+        [0xbbdb92, 0x7c00c4, 0x00d9ff, 0xff6600, 0xffd8d8, 0x021631, 0x339999, 0xf1dc39, 0xfb8166, 0xf18039];
+        let textColors: number[] =
+        [0x39f1dc, 0x39aaf1, 0x0a5787, 0x70459a, 0x456f9a, 0x459a70, 0x9b5f4f, 0x9a7045, 0x3f0000, 0x530b80];
 
-        var datas: model.CLSTableViewData[] = [];
+        var datas: model.TableViewData[] = [];
         for (var i: number = 0; i < 40; i++) {
-            let randomNumber = helper.randomInt(1, 10);
-            let randomNumber2 = helper.randomInt(1, 10);
+            let randomNumber = helper.randomInt(0, 2);
+            let randomNumber2 = helper.randomInt(0, 2);
             let text = String(helper.randomInt(1000000, 200000));
-            let data = new model.CLSTableViewData(text, textColors[randomNumber], textBackGrounds[randomNumber2]);
+            let data = new model.TableViewData(text, textColors[randomNumber], textBackGrounds[randomNumber2]);
             datas.push(data);
         }
 

@@ -4,15 +4,15 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 };
 var model;
 (function (model) {
-    var CLSTableViewData = (function () {
-        function CLSTableViewData(text, textColor, textBackGround) {
+    var TableViewData = (function () {
+        function TableViewData(text, textColor, textBackGround) {
             this.text = text;
             this.textColor = textColor;
             this.textBackGround = textBackGround;
         }
-        return CLSTableViewData;
+        return TableViewData;
     }());
-    model.CLSTableViewData = CLSTableViewData;
-    __reflect(CLSTableViewData.prototype, "model.CLSTableViewData", ["TableViewDataInterface"]);
+    model.TableViewData = TableViewData;
+    __reflect(TableViewData.prototype, "model.TableViewData", ["TableViewDataInterface"]);
 })(model || (model = {}));
-//# sourceMappingURL=CLSModel.js.map
+//# sourceMappingURL=Model.js.map
