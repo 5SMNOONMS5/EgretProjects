@@ -101,22 +101,22 @@ namespace config {
     }
 
     //当前舞台
-    export function curStage(): egret.Stage {
-        return egret.MainContext.instance.stage;
-    }
+    // export function curStage(): egret.Stage {
+    //     return egret.MainContext.instance.stage;
+    // }
 
     //当前面板
     export var curPanel: egret.DisplayObjectContainer;
 
     //当前游戏宽度
-    export function curWidth(): number {
-        return egret.MainContext.instance.stage.stageWidth;
-    }
+    // export function curWidth(): number {
+    //     return egret.MainContext.instance.stage.stageWidth;
+    // }
 
     //当前游戏宽度
-    export function curHeight(): number {
-        return egret.MainContext.instance.stage.stageHeight;
-    }
+    // export function curHeight(): number {
+    //     return egret.MainContext.instance.stage.stageHeight;
+    // }
 
 	
 }

@@ -1,4 +1,8 @@
 declare module skins{
+	class ProgressUISkin extends eui.Skin{
+	}
+}
+declare module skins{
 	class ButtonSkin extends eui.Skin{
 	}
 }

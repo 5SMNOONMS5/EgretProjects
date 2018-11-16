@@ -2,17 +2,37 @@
 	"initial": [
 		"libs/modules/egret/egret.js",
 		"libs/modules/egret/egret.web.js",
-		"libs/modules/game/game.js",
-		"libs/modules/res/res.js",
 		"libs/modules/eui/eui.js",
+		"libs/modules/assetsmanager/assetsmanager.js",
 		"libs/modules/tween/tween.js",
-		"promise/bin/promise.js",
-		"pureMVC/puremvc.js"
+		"libs/modules/promise/promise.js",
+		"libs/pureMVC/puremvc.js"
 	],
 	"game": [
-		"bin-debug/AssetAdapter.js",
-		"bin-debug/LoadingUI.js",
+		"bin-debug/core/view/base/BaseMediator.js",
+		"bin-debug/core/AppFacade.js",
 		"bin-debug/Main.js",
-		"bin-debug/ThemeAdapter.js"
+		"bin-debug/Platform.js",
+		"bin-debug/ThemeAdapter.js",
+		"bin-debug/config/GameConfig.js",
+		"bin-debug/config/GameData.js",
+		"bin-debug/constants/CommandNotify.js",
+		"bin-debug/constants/Error.js",
+		"bin-debug/constants/MediatorNotify.js",
+		"bin-debug/constants/ProxyNotify.js",
+		"bin-debug/core/AppController.js",
+		"bin-debug/LoadingUI.js",
+		"bin-debug/core/AppModel.js",
+		"bin-debug/core/AppView.js",
+		"bin-debug/core/controller/ControllerPrepCommand.js",
+		"bin-debug/core/controller/ModelPrepCommand.js",
+		"bin-debug/core/controller/StartupCommand.js",
+		"bin-debug/core/controller/ViewPrepCommand.js",
+		"bin-debug/core/view/GameLayerManager.js",
+		"bin-debug/AssetAdapter.js",
+		"bin-debug/core/view/components/ProgressUI.js",
+		"bin-debug/core/view/template/HallMediator.js",
+		"bin-debug/helper/log.js",
+		"bin-debug/utility/utility.js"
 	]
 }
